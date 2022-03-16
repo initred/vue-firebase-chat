@@ -2,7 +2,7 @@
   "name": "vite-vue-tailwindcss-js",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview --port 5050",
     "test:unit": "vitest --environment jsdom",
@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@headlessui/vue": "^1.5.0",
+    "firebase": "^9.6.8",
     "pinia": "^2.0.12",
     "vue": "^3.2.31",
     "vue-router": "^4.0.12"
