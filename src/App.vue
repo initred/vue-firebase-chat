@@ -1,12 +1,14 @@
 <script setup>
 import { onMounted, reactive, ref } from "vue"
-import db from "./db"
+import useChat from "@/composables/useChat"
+
+const { messages, setMessage, getMessages } = useChat()
 
 const inputUsername = ref("")
 const inputMessage = ref("")
+
 const state = reactive({
   username: "",
-  messages: [],
 })
 
 function login() {
@@ -21,39 +23,15 @@ function logout() {
 }
 
 function sendMessage() {
-  const messagesRef = db().ref("messages")
-
-  if (inputMessage.value === "" || inputMessage.value === null) {
-    return
-  }
-
-  const message = {
+  setMessage({
     username: state.username,
     content: inputMessage.value,
-  }
+  })
 
-  messagesRef.push(message)
   inputMessage.value = ""
 }
 
-onMounted(() => {
-  const messagesRef = db().ref("messages")
-
-  messagesRef.on("value", (snapshot) => {
-    const data = snapshot.val()
-    let messages = []
-
-    Object.keys(data).forEach((key) => {
-      messages.push({
-        id: key,
-        username: data[key].username,
-        content: data[key].content,
-      })
-    })
-
-    state.messages = messages
-  })
-})
+onMounted(() => getMessages())
 </script>
 
 <template>
@@ -78,8 +56,8 @@ onMounted(() => {
 
     <section>
       <div
-        v-for="message in state.messages"
-        :key="message.key"
+        v-for="message in messages"
+        :key="message.id"
         :class="message.username === state.username ? 'current-user' : ''"
       >
         <div>{{ message.username }}: {{ message.content }}</div>
