@@ -2,7 +2,7 @@
 import { onMounted, reactive, ref } from "vue"
 import useChat from "@/composables/useChat"
 
-const { messages, setMessage, getMessages } = useChat()
+const { chat, messages, setMessage, getMessages } = useChat()
 
 const inputUsername = ref("")
 const inputMessage = ref("")
@@ -31,47 +31,109 @@ function sendMessage() {
   inputMessage.value = ""
 }
 
-onMounted(() => getMessages())
+onMounted(() => {
+  getMessages()
+})
 </script>
 
 <template>
-  <div v-if="state.username === '' || state.username === null">
-    <form @submit.prevent="login">
-      <h1>Login to Chat</h1>
-      <label for="username">Username</label>
-      <input
-        v-model="inputUsername"
-        type="text"
-        placeholder="Enter your username"
-      />
-      <button type="submit">Login</button>
+  <div
+    v-if="state.username === '' || state.username === null"
+    :class="['w-full h-screen flex items-center justify-center', 'bg-rose-500']"
+  >
+    <form
+      class="max-w-sm w-full bg-white rounded shadow-lg p-6 space-y-6"
+      @submit.prevent="login"
+    >
+      <h1 class="text-lg font-bold text-gray-800">What's Your Name?</h1>
+      <div class="flex flex-col">
+        <label for="username" class="text-sm text-gray-500">Username</label>
+        <div class="mt-1">
+          <input
+            id="username"
+            v-model="inputUsername"
+            class="w-full border border-gray-300 rounded text-sm"
+            type="text"
+            placeholder="Enter your username"
+            autofocus
+          />
+        </div>
+      </div>
+      <button
+        type="submit"
+        class="w-full py-2.5 text-sm text-white bg-rose-500 font-medium rounded"
+      >
+        Enter
+      </button>
     </form>
   </div>
 
-  <div v-else>
-    <header>
-      <button type="button" @click="logout">Logout</button>
-      <h1>Welcome, {{ state.username }}</h1>
+  <div v-else class="w-full h-screen bg-rose-500 divide-y">
+    <header class="h-24 p-4">
+      <div class="flex justify-end">
+        <button
+          type="button"
+          class="px-4 text-red-100 font-bold"
+          @click="logout"
+        >
+          Logout
+        </button>
+      </div>
+      <h1 class="text-2xl font-bold text-white">
+        Welcome,
+        {{ state.username }}
+      </h1>
     </header>
 
-    <section>
+    <section
+      ref="chat"
+      class="h-[calc(100vh-12rem)] overflow-y-scroll bg-white rounded-t-2xl flex flex-col px-6 py-8 space-y-4"
+    >
       <div
         v-for="message in messages"
         :key="message.id"
-        :class="message.username === state.username ? 'current-user' : ''"
+        :class="message.username === state.username ? 'self-end' : 'self-start'"
       >
-        <div>{{ message.username }}: {{ message.content }}</div>
+        <div
+          :class="
+            message.username === state.username
+              ? 'flex flex-col items-end'
+              : 'flex flex-col items-start'
+          "
+        >
+          <span class="text-gray-500 text-sm">
+            {{ message.username }}
+          </span>
+          <p
+            :class="[
+              'rounded-2xl p-2 px-4 mt-1.5 font-medium',
+              message.username === state.username
+                ? 'bg-rose-600 text-white'
+                : 'bg-gray-200 text-gray-900',
+            ]"
+          >
+            {{ message.content }}
+          </p>
+        </div>
       </div>
     </section>
 
-    <footer>
-      <form @submit.prevent="sendMessage">
-        <input
-          v-model="inputMessage"
-          type="text"
-          placeholder="write a message"
-        />
-        <button type="submit">Send</button>
+    <footer class="h-24 flex justify-center items-center px-6 bg-white">
+      <form class="w-full flex space-x-2" @submit.prevent="sendMessage">
+        <div class="flex-1">
+          <input
+            v-model="inputMessage"
+            class="w-full border border-gray-300 rounded"
+            type="text"
+            placeholder="write a message"
+          />
+        </div>
+        <button
+          class="px-4 bg-rose-600 text-white text-sm rounded"
+          type="submit"
+        >
+          Send
+        </button>
       </form>
     </footer>
   </div>

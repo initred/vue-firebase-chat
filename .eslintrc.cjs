@@ -14,11 +14,23 @@ module.exports = {
   },
   overrides: [
     {
-      files: ["cypress/integration/**.spec.{js,ts,jsx,tsx}"],
-      extends: ["plugin:cypress/recommended"],
+      files: [
+        "cypress/integration/**.spec.{js,ts,jsx,tsx}",
+      ],
+      extends: [
+        "plugin:cypress/recommended",
+      ],
     },
   ],
   rules: {
-    "prettier/prettier": ["warn", { semi: false, bracketSpacing: true }],
+    "prettier/prettier":
+      [
+        "warn",
+        {
+          printWidth: 80,
+          semi: false,
+          bracketSpacing: true,
+        },
+      ],
   },
 }

@@ -1,8 +1,9 @@
 import { getDatabase, ref, push, set, onValue } from "firebase/database"
-import { ref as vueRef } from "vue"
+import { ref as vueRef, watch, nextTick } from "vue"
 
 function useChat() {
   const db = getDatabase()
+  const chat = vueRef(null)
   const messages = vueRef([])
   const messagesRef = ref(db, "messages")
 
@@ -39,10 +40,29 @@ function useChat() {
     })
   }
 
+  async function scrollDown() {
+    console.dir(chat.value)
+    if (chat.value !== null) {
+      await nextTick()
+      chat.value.scrollTop = chat.value.scrollHeight
+    }
+  }
+
+  watch(chat, async () => {
+    await scrollDown()
+  })
+
+  watch(messages, async () => {
+    await scrollDown()
+  })
+
   return {
+    chat,
     messages,
     setMessage,
     getMessages,
+    scrollDown,
   }
 }
+
 export default useChat

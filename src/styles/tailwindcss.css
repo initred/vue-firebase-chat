@@ -7,4 +7,8 @@
     @apply antialiased;
     text-rendering: optimizeLegibility;
   }
+
+  ::-webkit-scrollbar{
+    width: 0px;
+  }
 }
