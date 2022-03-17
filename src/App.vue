@@ -42,7 +42,7 @@ onMounted(() => {
     :class="['w-full h-screen flex items-center justify-center', 'bg-rose-500']"
   >
     <form
-      class="max-w-sm w-full bg-white rounded shadow-lg p-6 space-y-6"
+      class="max-w-sm w-full bg-white rounded shadow-lg p-6 space-y-6 mx-4"
       @submit.prevent="login"
     >
       <h1 class="text-lg font-bold text-gray-800">What's Your Name?</h1>
